@@ -43,7 +43,7 @@ class PressParserTest extends TestCase {
 		$data = $PressParser->getData();
 
 		$this->assertEquals(
-			'My Title',
+			'<p>My Title</p>',
 			$data['title']
 		);
 

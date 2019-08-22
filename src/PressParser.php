@@ -2,9 +2,8 @@
 
 namespace Dzineer\Press;
 
-use Carbon\Carbon;
 use Illuminate\Support\Facades\File;
-use PHPUnit\Util\Filesystem;
+use Illuminate\Support\Str;
 
 class PressParser
 {
@@ -67,6 +66,18 @@ class PressParser
 	}
 
 	protected function processFields() {
+
+		foreach ($this->data as $field => $value) {
+			$class = "Dzineer\\Press\\Fields\\" . Str::title($field);
+			if (class_exists( $class ) && method_exists($class, 'process')) {
+				$result = $class::process($field, $value);
+				$this->data = array_merge( $this->data, $result );
+			}
+		}
+
+	}
+
+/*	protected function processFields() {
 		foreach ($this->data as $field => $value) {
 			if ($field === 'date') {
 				$this->data['date'] = Carbon::parse( $value );
@@ -75,4 +86,6 @@ class PressParser
 			}
 		}
 	}
+*/
+
 }
