@@ -1,0 +1,27 @@
+{
+    "name": "dzineer/press",
+    "description": "An elegant markdown-powered blog for the Laravel framework",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Frank Decker",
+            "email": "frank@dzineer.com"
+        }
+    ],
+    "require": {
+        "erusev/parsedown": "^1.7"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^3.8"
+    },
+    "autoload": {
+        "psr-4": {
+            "Dzineer\\Press\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Dzineer\\Press\\Tests\\": "tests/"
+        }
+    }
+}
