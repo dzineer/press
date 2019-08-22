@@ -1,11 +1,9 @@
 <?php
 
-namespace Dzineer\Press\Tests\Feature;
+namespace Dzineer\Press\Tests;
 
 use Carbon\Carbon;
 use Dzineer\Press\PressParser;
-use Illuminate\Support\Facades\File;
-use Orchestra\Testbench\TestCase;
 
 class PressParserTest extends TestCase {
 
@@ -13,7 +11,7 @@ class PressParserTest extends TestCase {
 	public function the_head_and_body_gets_split() {
 		$PressParser = (new PressParser("file",__DIR__ . '/../blogs/MarkFile1.md'));
 
-		$data = $PressParser->getData();
+		$data = $PressParser->getRawData();
 
 		$this->assertStringContainsString(
 			'title: My Title',
@@ -48,7 +46,7 @@ class PressParserTest extends TestCase {
 		);
 
 		$this->assertEquals(
-			'Description here',
+			'<p>Description here</p>',
 			$data['description']
 		);
 
@@ -97,5 +95,23 @@ class PressParserTest extends TestCase {
 		$this->assertEquals('05/14/1988', $data['date']->format('m/d/Y') );
 
 	}
+
+	/**
+	 * @test
+	 */
+	public function an_extra_field_gets_saved() {
+		$PressParser = (new PressParser("string", "---\nauthor: John Doe\n---\n"));
+		$data =  $PressParser->getData();
+		$this->assertEquals( json_encode(['author' => 'John Doe']), $data['extra_json']);
+    }
+
+	/**
+	 * @test
+	 */
+	public function two_additional_fields_are_put_into_extra() {
+		$PressParser = (new PressParser("string", "---\nauthor: John Doe\nimage: some/image\n---\n"));
+		$data =  $PressParser->getData();
+		$this->assertEquals( json_encode(['author' => 'John Doe', 'image' => 'some/image']), $data['extra_json'] );
+    }
 
 }

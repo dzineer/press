@@ -2,5 +2,6 @@
 
 namespace Dzineer\Press\Fields;
 
-class Description{
-}
+use Dzineer\Press\Contracts\FieldContract;
+
+class Description extends FieldContract {}

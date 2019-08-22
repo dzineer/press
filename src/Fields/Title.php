@@ -2,12 +2,6 @@
 
 namespace Dzineer\Press\Fields;
 
-use Dzineer\Press\MarkdownParser;
+use Dzineer\Press\Contracts\FieldContract;
 
-class Title {
-	public static function process($type, $value) {
-		return [
-			$type => MarkdownParser::parse( $value )
-		];
-	}
-}
+class Title extends FieldContract {}

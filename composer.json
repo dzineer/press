@@ -23,5 +23,12 @@
         "psr-4": {
             "Dzineer\\Press\\Tests\\": "tests/"
         }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Dzineer\\Press\\PressBaseServiceProvider"
+            ]
+        }
     }
 }

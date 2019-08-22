@@ -1,9 +1,8 @@
 <?php
 
-namespace Dzineer\Press\Tests\Feature;
+namespace Dzineer\Press\Tests;
 
 use Dzineer\Press\MarkdownParser;
-use Orchestra\Testbench\TestCase;
 
 class MarkdownTest extends TestCase
 {
