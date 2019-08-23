@@ -1,37 +1,35 @@
 <?php
 
-namespace Dzineer\Press;
+namespace Dzineer\Press\Parsers;
 
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
-class PressParser
+abstract class PressBaseParser
 {
-	protected $filename;
 	protected $rawData;
 	protected $data;
 	protected $extraData = [];
 	protected $type;
+
 	protected $templates = [
 		"ALL_CONTENT" => '/^\-{3}(.*?)\-{3}(.*)/s',
 		"SECTION" => '/(.*):\s?(.*)/'
 	];
 
-	public function __construct($type, $s)
-	{
-		$this->type = $type;
+	protected $identifier;
 
-		switch ($this->type) {
-			case 'string':
-				$this->matchData( $this->templates[ "ALL_CONTENT" ], $s);
-				break;
-			case 'file':
-				$this->filename = $s;
-				$this->splitFile();
+	public function __construct($s, $identifier, $templates = [])
+	{
+		$this->identifier = $identifier;
+
+		if (count($templates)) {
+			$this->templates = $templates;
 		}
 
+		$this->matchData( $this->templates[ "ALL_CONTENT" ], $s);
 		$this->explodeData();
 		$this->processFields();
+
 	}
 
 	public function getData()
@@ -44,32 +42,32 @@ class PressParser
 		return $this->rawData;
 	}
 
-	private function splitFile() {
-
-		$fileData = File::get( $this->filename );
-		$this->matchData($this->templates[ "ALL_CONTENT" ], $fileData);
-
-	}
-
 	protected function matchData($expression, $text) {
+
+		// dd([$expression, $text, $this->rawData]);
+		//dnd("text: ", $this->rawData);
+		//var_dump($this->rawData);
 		preg_match(
 			$expression,
 			$text,
 			$this->rawData
 		);
+		//echo "\nafter preg_match\n";
 	}
 
 	protected function explodeData() {
-
+		//echo "\naexplodeData\n";
 		$sections = explode("\n", trim($this->rawData[1]));
 
 		foreach( $sections as $section ) {
+			//var_dump($section);
 			$pattern = $this->templates[ "SECTION" ];
 			preg_match( $pattern, $section, $pieces);
 			$this->data[ $pieces[1] ] = $pieces[2];
 		}
 
 		$this->data['body'] = trim($this->rawData[2]);
+		//echo "\nend explodeData\n";
 	}
 
 	protected function processFields() {
@@ -92,16 +90,6 @@ class PressParser
 
 	}
 
-/*	protected function processFields() {
-		foreach ($this->data as $field => $value) {
-			if ($field === 'date') {
-				$this->data['date'] = Carbon::parse( $value );
-			} else if ($field === 'body') {
-				$this->data['body'] = MarkdownParser::parse( $value );
-			}
-		}
-	}
-*/
 	/**
 	 * @param $field
 	 * @param $value
