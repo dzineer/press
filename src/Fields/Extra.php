@@ -6,8 +6,8 @@ use Dzineer\Press\MarkdownParser;
 
 class Extra {
 	public static function process($type, $value) {
-		return [
+		return json_encode([
 			$type => $value
-		];
+		]);
 	}
 }

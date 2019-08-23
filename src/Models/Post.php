@@ -14,4 +14,8 @@ class Post extends Model {
 		'body',
 		'extra'
 	];
+
+	public function extra($field) {
+		return optional(json_decode($this->extra))->$field;
+	}
 }

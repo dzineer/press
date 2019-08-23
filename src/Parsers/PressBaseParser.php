@@ -8,7 +8,7 @@ abstract class PressBaseParser
 {
 	protected $rawData;
 	protected $data;
-	protected $extraData = [];
+	protected $extra = [];
 	protected $type;
 
 	protected $templates = [
@@ -56,7 +56,6 @@ abstract class PressBaseParser
 	}
 
 	protected function explodeData() {
-		//echo "\naexplodeData\n";
 		$sections = explode("\n", trim($this->rawData[1]));
 
 		foreach( $sections as $section ) {
@@ -67,7 +66,6 @@ abstract class PressBaseParser
 		}
 
 		$this->data['body'] = trim($this->rawData[2]);
-		//echo "\nend explodeData\n";
 	}
 
 	protected function processFields() {
@@ -75,17 +73,16 @@ abstract class PressBaseParser
 		foreach ($this->data as $field => $value) {
 
 			$class = "Dzineer\\Press\\Fields\\" . Str::title($field);
-			if (! class_exists( $class ) && ! method_exists($class, 'process')) {
-				$this->processExtraField( $field, $value );
-			} else {
-				$this->processField( $class, $field, $value );
-			}
 
+			if ( class_exists( $class ) && method_exists($class, 'process')) {
+				$this->processField( $class, $field, $value );
+			} else {
+				$this->processExtraField( $field, $value );
+			}
 		}
 
-		if($this->extraData) {
-			$this->data['extra'] = $this->extraData;
-			$this->data['extra_json'] = json_encode($this->extraData);
+		if (count($this->extra)) {
+			$this->data['extra'] = $this->extra;
 		}
 
 	}
@@ -97,7 +94,12 @@ abstract class PressBaseParser
 	protected function processExtraField( $field, $value ) {
 		$class           = "Dzineer\\Press\\Fields\\Extra";
 		$result          = $class::process( $field, $value );
-		$this->extraData = array_merge( $this->extraData, $result );
+
+		if (!count($this->extra)) {
+			$this->extra = [];
+		}
+
+		$this->extra = array_merge( $this->extra, json_decode($result, true) );
 	}
 
 	/**
