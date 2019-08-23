@@ -72,18 +72,29 @@ abstract class PressBaseParser
 
 		foreach ($this->data as $field => $value) {
 
-			$class = "Dzineer\\Press\\Fields\\" . Str::title($field);
+			$class = $this->getField( Str::title($field) );
 
 			if ( class_exists( $class ) && method_exists($class, 'process')) {
 				$this->processField( $class, $field, $value );
 			} else {
-				$this->processExtraField( $field, $value );
+				$customClass = "Dzineer\\Press\\Fields\\" . Str::title( $field );
+
+				if (class_exists( $customClass ) && method_exists($customClass, 'process')) {
+					// dd($customClass);
+					$this->processCustomField( $customClass, $field, $value );
+				} else {
+					$this->processExtraField( $field, $value );
+				}
 			}
 		}
 
 		if (count($this->extra)) {
-			$this->data['extra'] = $this->extra;
+			$this->data['extra'] = json_encode($this->extra);
+		} else {
+			$this->data['extra'] = json_encode([]);
 		}
+
+		// dd($this->data);
 
 	}
 
@@ -93,6 +104,16 @@ abstract class PressBaseParser
 	 */
 	protected function processExtraField( $field, $value ) {
 		$class           = "Dzineer\\Press\\Fields\\Extra";
+		$result          = $class::process( $field, $value );
+
+		if (!count($this->extra)) {
+			$this->extra = [];
+		}
+
+		$this->extra = array_merge( $this->extra, json_decode($result, true) );
+	}
+
+	protected function processCustomField( $class, $field, $value ) {
 		$result          = $class::process( $field, $value );
 
 		if (!count($this->extra)) {
@@ -112,4 +133,24 @@ abstract class PressBaseParser
 		$result     = $class::process( $field, $value );
 		$this->data = array_merge( $this->data, $result );
 	}
+
+	/**
+	 * @param $field
+	 *
+	 * @return string
+	 */
+	protected function getField( $field ): string {
+		$class = "Dzineer\\Press\\Fields\\" . Str::title( $field );
+
+		foreach(\Dzineer\Press\Facades\Press::availableFields() as $availableField) {
+			$class = new \ReflectionClass( $availableField );
+
+			if ($class->getShortName() === $field) {
+				return $class->getName();
+			}
+		}
+
+		return $class;
+	}
+
 }

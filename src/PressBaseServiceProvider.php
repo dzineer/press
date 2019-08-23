@@ -28,6 +28,7 @@ class PressBaseServiceProvider extends ServiceProvider {
 
 		$this->registerFacade();
 		$this->registerRoutes();
+		$this->registerFields();
 
 	}
 
@@ -54,5 +55,14 @@ class PressBaseServiceProvider extends ServiceProvider {
 		$this->app->singleton('Press', function($app) {
 			return new \Dzineer\Press\Press();
 		});
+	}
+
+	private function registerFields() {
+		Press::fields([
+			Fields\Body::class,
+			Fields\Date::class,
+			Fields\Extra::class,
+			Fields\Title::class,
+		]);
 	}
 }

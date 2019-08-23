@@ -27,7 +27,7 @@ class PostRepository {
 	 */
 	protected function extra( $post ) {
 		// dd('post', $post);
-		$extra = $post['extra'];
+		$extra = json_decode($post['extra'], true);
 		$attributes = Arr::except($post, ['title', 'body', 'identifier', 'extra']);
 		return json_encode(
 			array_merge($extra, $attributes)

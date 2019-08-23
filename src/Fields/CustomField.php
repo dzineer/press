@@ -2,7 +2,7 @@
 
 namespace Dzineer\Press\Fields;
 
-class Extra {
+class CustomField {
 	public static function process($type, $value) {
 		return json_encode([
 			$type => $value

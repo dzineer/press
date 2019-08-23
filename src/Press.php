@@ -8,10 +8,12 @@ use Illuminate\Support\Str;
 class Press {
 
 	private $driver;
+	protected $fields;
 
 	public function __construct()
 	{
 		$this->loadDriver();
+		$this->fields = [];
 	}
 
 	public function configNotPublished() {
@@ -29,6 +31,15 @@ class Press {
 
 	public function fetchPosts() {
 		return $this->driver->fetchPosts();
+	}
+
+	public function fields($fields = []) {
+		// dd($fields);
+		$this->fields = array_merge($this->fields, $fields);
+	}
+
+	public function availableFields() {
+		return $this->fields;
 	}
 
 }
