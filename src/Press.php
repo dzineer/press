@@ -23,6 +23,10 @@ class Press {
 		$this->driver = DriverFactory::Create( $driver_config );
 	}
 
+	public static function routePathPrefix() {
+		return config( 'press.routes.path', 'blogs' );
+	}
+
 	public function fetchPosts() {
 		return $this->driver->fetchPosts();
 	}

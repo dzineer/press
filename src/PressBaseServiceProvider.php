@@ -26,6 +26,7 @@ class PressBaseServiceProvider extends ServiceProvider {
 		$this->loadMigrationsFrom( __DIR__ . '/../database/migrations' );
 		$this->loadViewsFrom(__DIR__ . '/../resources/views', 'press');
 		$this->registerRoutes();
+
 	}
 
 	protected function registerPublishing() {
@@ -35,8 +36,14 @@ class PressBaseServiceProvider extends ServiceProvider {
 	}
 
 	protected function registerRoutes() {
-		Route::group([],function() {
+		Route::group( $this->routeConfiguration(), function() {
 			$this->loadRoutesFrom( __DIR__ . '/../routes/web.php' );
 		});
+	}
+
+	private function routeConfiguration() {
+		return [
+			'prefix' => Press::routePathPrefix()
+		];
 	}
 }
