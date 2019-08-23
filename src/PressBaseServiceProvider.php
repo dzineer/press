@@ -4,7 +4,7 @@ namespace Dzineer\Press;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
-
+use Dzineer\Press\Facades\Press;
 
 class PressBaseServiceProvider extends ServiceProvider {
 
@@ -25,6 +25,8 @@ class PressBaseServiceProvider extends ServiceProvider {
 
 		$this->loadMigrationsFrom( __DIR__ . '/../database/migrations' );
 		$this->loadViewsFrom(__DIR__ . '/../resources/views', 'press');
+
+		$this->registerFacade();
 		$this->registerRoutes();
 
 	}
@@ -43,7 +45,14 @@ class PressBaseServiceProvider extends ServiceProvider {
 
 	private function routeConfiguration() {
 		return [
-			'prefix' => Press::routePathPrefix()
+			'prefix' => Press::routePathPrefix(),
+			'namespace' => 'Dzineer\Press\Http\Controllers',
 		];
+	}
+
+	protected function registerFacade() {
+		$this->app->singleton('Press', function($app) {
+			return new \Dzineer\Press\Press();
+		});
 	}
 }

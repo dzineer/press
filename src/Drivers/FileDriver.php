@@ -27,8 +27,8 @@ class FileDriver extends Driver {
 		return $this->posts ?? [];
 	}
 
-
 	protected function validateSource() {
+		//dd($this->config['path']);
 		if ( ! File::exists(
 			$this->config['path']
 		)) {

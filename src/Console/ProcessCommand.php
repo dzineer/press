@@ -2,12 +2,9 @@
 
 namespace Dzineer\Press\Console;
 
-use Dzineer\Press\Factories\DriverFactory;
-use Dzineer\Press\Factories\PressParserFactory;
+use Dzineer\Press\Facades\Press;
 use Dzineer\Press\Models\Post;
-use Dzineer\Press\Press;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
 class ProcessCommand extends Command {
@@ -23,7 +20,7 @@ class ProcessCommand extends Command {
 		}
 
 		try {
-			$posts = (new Press)->fetchPosts();
+			$posts = Press::fetchPosts();
 
 			// dd($posts);
 

@@ -28,7 +28,7 @@ return [
 	*/
 
 	'file' => [
-		'path' => 'blogs',
+		'path' => '../blogs',
 	],
 
 	/*
@@ -43,7 +43,8 @@ return [
 	*/
 
 	'routes' => [
-		'path' => 'blogs'
+		'path' => 'blogs',
+		'default' => '/'
 	]
 
 ];

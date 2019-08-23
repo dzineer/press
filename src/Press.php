@@ -14,7 +14,7 @@ class Press {
 		$this->loadDriver();
 	}
 
-	public static function configNotPublished() {
+	public function configNotPublished() {
 		return is_null( config('press') );
 	}
 
@@ -23,7 +23,7 @@ class Press {
 		$this->driver = DriverFactory::Create( $driver_config );
 	}
 
-	public static function routePathPrefix() {
+	public function routePathPrefix() {
 		return config( 'press.routes.path', 'blogs' );
 	}
 
